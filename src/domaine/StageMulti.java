@@ -12,6 +12,10 @@ public class StageMulti extends Stage {
         this.activites = activites;
     }
 
+    public ArrayList<Activite> getActivites() {
+        return activites;
+    }
+
     public String toString() {
         return super.toString() + activites + " " + niveau;
     }

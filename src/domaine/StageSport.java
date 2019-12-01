@@ -8,6 +8,10 @@ public class StageSport extends Stage {
         this.activite = activite;
     }
 
+    public Activite getActivite() {
+        return activite;
+    }
+
     public String toString() {
         return super.toString() + activite;
     }

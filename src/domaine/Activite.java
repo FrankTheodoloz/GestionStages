@@ -17,6 +17,10 @@ public class Activite {
         this.nom = nom;
     }
 
+    public String getNom() {
+        return nom;
+    }
+
     public boolean equals(Object obj) {
         return (no == ((Activite) obj).no) || ((nom != null) && (nom.equals(((Activite) obj).nom)));
     }
