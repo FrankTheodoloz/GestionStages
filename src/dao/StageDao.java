@@ -1,6 +1,7 @@
 package dao;
 
 import domaine.*;
+import exceptions.InvalidParsedParameterException;
 import outils.FileToStr;
 
 import java.util.ArrayList;
@@ -28,7 +29,9 @@ public class StageDao {
      * @return un ArrayList contenant tous les stages. */
     public static ArrayList<Stage> chargerStages(String filename) {
         ArrayList<Stage> stages = new ArrayList<>();
+        int noLigne = 0;
         for (String[] ligne : FileToStr.lireFichier(filename)) {
+            noLigne++;
             int no = Integer.parseInt(ligne[0]);
             int jourDebut = Integer.parseInt(ligne[1]);
             int nbJours = Integer.parseInt(ligne[2]);
@@ -36,15 +39,43 @@ public class StageDao {
             int heureFin = Integer.parseInt(ligne[4]);
             int noCategorieAge = Integer.parseInt(ligne[5]);
             CategorieAge categorieAge = categoriesAge.get(noCategorieAge);
+
+            // categorie d'age inconnue
+            try {
+                if (categorieAge == null) throw new InvalidParsedParameterException("catégorie age");
+            } catch (InvalidParsedParameterException e) {
+                System.out.println(e + " à la ligne " + noLigne);
+            }
+
             if (ligne.length == 7) {
-                stages.add(new StageSport(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge, activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[6]))))));
+
+                // numéro d'activité inconnu et erreur paramètre création stage
+                try {
+                    stages.add(new StageSport(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge, activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[6]))))));
+                } catch (InvalidParsedParameterException e) {
+                    System.out.println(e + " à la ligne " + noLigne);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Erreur de lecture du fichier, paramètre numéro activité à la ligne " + noLigne);
+                }
             } else {
                 String niveau = ligne[6];
                 ArrayList<Activite> aLstAct = new ArrayList<>();
                 for (int i = 7; i < ligne.length; i++) {
-                    aLstAct.add(activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[i])))));
+
+                    // numéro d'activité inconnu
+                    try {
+                        aLstAct.add(activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[i])))));
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Erreur de lecture du fichier, paramètre numéro activité à la ligne " + noLigne);
+                    }
                 }
-                stages.add(new StageMulti(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge, niveau, aLstAct));
+
+                // erreur paramètre création stage
+                try {
+                    stages.add(new StageMulti(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge, niveau, aLstAct));
+                } catch (InvalidParsedParameterException e) {
+                    System.out.println(e + " à la ligne " + noLigne);
+                }
             }
         }
         return stages;

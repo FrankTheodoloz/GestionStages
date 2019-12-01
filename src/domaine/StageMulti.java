@@ -1,12 +1,14 @@
 package domaine;
 
+import exceptions.*;
+
 import java.util.ArrayList;
 
 public class StageMulti extends Stage {
     private String niveau;
     private ArrayList<Activite> activites;
 
-    public StageMulti(int no, int jourDebut, int nbJours, int heureDebut, int heureFin, CategorieAge categorieAge, String niveau, ArrayList<Activite> activites) {
+    public StageMulti(int no, int jourDebut, int nbJours, int heureDebut, int heureFin, CategorieAge categorieAge, String niveau, ArrayList<Activite> activites) throws InvalidParsedParameterException {
         super(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge);
         this.niveau = niveau;
         this.activites = activites;
