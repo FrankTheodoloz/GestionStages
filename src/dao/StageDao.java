@@ -2,6 +2,7 @@ package dao;
 
 import domaine.*;
 import outils.FileToStr;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,7 +27,7 @@ public class StageDao {
      * @param filename  indique le nom du fichier à lire contenant toutes les données de tous les stages.
      * @return un ArrayList contenant tous les stages. */
     public static ArrayList<Stage> chargerStages(String filename) {
-        ArrayList<Stage> stages =  new ArrayList<>();
+        ArrayList<Stage> stages = new ArrayList<>();
         for (String[] ligne : FileToStr.lireFichier(filename)) {
             int no = Integer.parseInt(ligne[0]);
             int jourDebut = Integer.parseInt(ligne[1]);
@@ -40,7 +41,9 @@ public class StageDao {
             } else {
                 String niveau = ligne[6];
                 ArrayList<Activite> aLstAct = new ArrayList<>();
-                for (int i=7; i<ligne.length; i++) { aLstAct.add(activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[i]))))); }
+                for (int i = 7; i < ligne.length; i++) {
+                    aLstAct.add(activites.get(activites.indexOf(new Activite(Integer.parseInt(ligne[i])))));
+                }
                 stages.add(new StageMulti(no, jourDebut, nbJours, heureDebut, heureFin, categorieAge, niveau, aLstAct));
             }
         }
